@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ImageRequest {
+  id           Int      @id @default(autoincrement())
+  title        String
+  instructions String
+  prompt       String?
+  status       String   @default("waiting") // "waiting", "prompting", "generating", "done", "failed"
+  imageUrl     String?
+  referenceUrl String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model GeneratedImage {
+  id             Int      @id @default(autoincrement())
+  title          String
+  instructions   String?
+  prompt         String?     // Gemini-generated prompt
+  imageUrl       String? @db.Text
+  referenceImage String?
+  status         String   @default("creating prompt")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
